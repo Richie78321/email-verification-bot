@@ -1,4 +1,5 @@
 import { REST } from "@discordjs/rest";
+import { join } from "path";
 import { Routes, APIApplicationCommandOption } from "discord-api-types/v9";
 import { CommandInteraction } from "discord.js";
 import dotenv from "dotenv";
@@ -21,11 +22,11 @@ if (!process.env.DISCORD_TOKEN) {
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
 const commandFiles = fs
-  .readdirSync("./build/commands")
-  .filter((file) => file.endsWith(".js")); // .js because .ts is compiled into .js files
+  .readdirSync(join(__dirname, "commands"))
+  .filter((file) => file.endsWith(".ts")); // .js because .ts is compiled into .js files
 export const commands: Command[] = [];
 for (const commandFile of commandFiles) {
-  commands.push(require(`./commands/${commandFile}`).command);
+  commands.push(require(join(__dirname, "commands", commandFile)).command);
 }
 
 export async function registerCommands() {
