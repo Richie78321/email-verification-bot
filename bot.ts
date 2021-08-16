@@ -1,6 +1,5 @@
-import { Guild, GuildMember } from 'discord.js/typings';
 import { Client, Intents } from 'discord.js';
-import { registerCommands } from './commands';
+import { registerCommands, commands } from './commands';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -16,12 +15,20 @@ client.once('ready', () => {
   }
 });
 
-// Emitted when the bot joins a server.
-client.on('guildCreate', (guild: Guild) => {
+// Emitted when a user joins a server.
+client.on('guildMemberAdd', (member) => {
 });
 
-// Emitted when a user joins a server.
-client.on('guildMemberAdd', (member: GuildMember) => {
+// Emitted when a user makes an interaction with the bot.
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  for (const command of commands) {
+    if (interaction.commandName === command.data.name) {
+      await command.execute(interaction);
+      break;
+    }
+  }
 });
 
 client.login(process.env.DISCORD_TOKEN);
