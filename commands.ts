@@ -23,7 +23,7 @@ const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
 const commandFiles = fs
   .readdirSync(join(__dirname, "commands"))
-  .filter((file) => file.endsWith(".ts")); // .js because .ts is compiled into .js files
+  .filter((file) => file.endsWith(".ts"));
 export const commands: Command[] = [];
 for (const commandFile of commandFiles) {
   commands.push(require(join(__dirname, "commands", commandFile)).command);
